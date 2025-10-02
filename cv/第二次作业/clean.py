@@ -1,9 +1,21 @@
 import cv2
 
-input_file= '1.png'
-output_file1= 'blurred_1.png'
+"""
+低通滤波
+"""
+input_file = '1.png'
 
-kernel_size=(3,3)
-denoise_image=cv2.blur(cv2.imread(input_file),kernel_size)
+img = cv2.imread(input_file)
+if img is None:
+	print(f"Could not read input image: {input_file}")
 
-cv2.imwrite(output_file1,denoise_image)
+kernel_size = (3, 3)# 核大小
+denoised_blur = cv2.blur(img, kernel_size)#均值滤波
+denoised_median = cv2.medianBlur(img, 3)#中值滤波
+
+cv2.imwrite('denoised_blur.png', denoised_blur)
+cv2.imwrite('denoised_median.png', denoised_median)         
+
+
+
+
