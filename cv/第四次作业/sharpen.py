@@ -5,6 +5,7 @@ import numpy as np
 input_file = 'image.png'
 output_file = 'sharpened_image.png'
 image = cv2.imread(input_file, cv2.IMREAD_GRAYSCALE)
+# 使用拉普拉斯算子进行锐化
 kernel = np.array([[-1,0,1],
                    [-2,0,2],
                    [-1,0,1]])

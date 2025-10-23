@@ -1,34 +1,36 @@
 import cv2
 import numpy as np
 
-def inverse_filtering(image, psf, eps=1e-3):
-    # 将图像和 PSF 转换到频域
-    image_fft = np.fft.fft2(image)
-    psf_fft = np.fft.fft2(psf, s=image.shape)
-    
-    # 避免除以零，添加一个小的正则化项 eps
-    psf_fft = psf_fft + eps
-    
-    # 逆滤波公式：F_restored = F_observed / H
-    restored_fft = image_fft / psf_fft
-    
-    # 逆傅里叶变换回到空间域
-    restored_image = np.fft.ifft2(restored_fft)
-    restored_image = np.abs(restored_image)
-    
-    return restored_image
+inout_file = 'house.png'
+image = cv2.imread(inout_file, cv2.IMREAD_GRAYSCALE)
 
-input_file = 'house.png'
+# 使用反向滤波
 
-image = cv2.imread(input_file, cv2.IMREAD_GRAYSCALE)
+# 定义一个低通滤波器函数
+def ideal_low_pass_filter(shape, cutoff):
+    rows, cols = shape
+    center_row, center_col = rows // 2, cols // 2
+    mask = np.zeros((rows, cols), dtype=np.float32)
+    for i in range(rows):
+        for j in range(cols):
+            distance = np.sqrt((i - center_row) ** 2 + (j - center_col) ** 2)
+            if distance <= cutoff:
+                mask[i, j] = 1
+    return mask
 
-# 定义一个简单的运动模糊 PSF
-psf = np.zeros_like(image)
-psf[int(image.shape[0] / 2), int(image.shape[1] / 2 - 5):int(image.shape[1] / 2 + 5)] = 1
-psf = psf / psf.sum()
+# 将图像转换为频域
+image_fft = np.fft.fft2(image)# 傅里叶变换
+image_fft_shifted = np.fft.fftshift(image_fft)# 将零频率分量移到频谱中心
 
-# 应用逆滤波
-restored_image = inverse_filtering(image, psf)
+# 定义滤波器参数
+cutoff_frequency = 50  # 截止频率
+filter_mask = ideal_low_pass_filter(image.shape, cutoff_frequency)
 
-# 保存结果
+# 应用反向滤波器
+restored_fft_shifted = image_fft_shifted / (filter_mask + 1e-5)  # 避免除以零
+restored_fft = np.fft.ifftshift(restored_fft_shifted)
+restored_image = np.fft.ifft2(restored_fft)
+restored_image = np.abs(restored_image)
+
+
 cv2.imwrite('restored_image.png', restored_image)
