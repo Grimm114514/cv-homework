@@ -1,0 +1,13 @@
+从以下四篇论文中任选一篇进行论文精读：
+1. Deep Residual Learning (CVPR 2016)
+2. Swin Transformer Hierarchical Vision Transformer Using Shifted Windows (ICCV 2021)
+3. Segment Anything (ICCV 2023)
+4. VGGT Visual Geometry Grounded Transformer (CVPR 2025)
+
+提交要求：
+1. 制作文献报告PPT（需要包含研究意义介绍、主要流程介绍、算法细节介绍、实验结果介绍、结果分析和结论等），其他部分（自己的感受、收获、与课程内容或自己研究的关联等）可自由发挥；
+2. 为PPT录制语音讲解，将录屏文件转为一个MP4文件（20分钟，50MB以内），将mp4文件和ppt文件一同打包压缩提交，命名为“学号_姓名_文献阅读.zip”；
+3. 截止日期：2025年12月31日23:59。
+
+特别提示：
+良好的文献精读需要对研究背景、相关文献、基本概念等理解清楚。需要理解这个问题的历史研究脉络、作者想法的来源、以往的相关研究等。同时还应该思考这篇文章和我们的课堂讲授内容之间是什么关联，是否可以把课堂上的一些知识点串联起来。
