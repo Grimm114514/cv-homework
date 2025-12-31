@@ -191,6 +191,9 @@ class MotionAnalyzer:
         参数:
             video_paths: 视频路径列表
             labels: 视频标签列表
+            
+        返回:
+            results: 包含(mei, mhi, frame_count)的列表
         """
         results = []
         
@@ -219,6 +222,8 @@ class MotionAnalyzer:
         plt.suptitle('多视频运动分析对比', fontsize=16, fontweight='bold')
         plt.tight_layout()
         plt.show()
+        
+        return results
 
 
 def process_single_video(video_path):
@@ -230,15 +235,14 @@ def process_single_video(video_path):
         
         # 保存结果
         video_stem = Path(video_path).stem
-        output_dir = Path(video_path).parent
+        Path("data").mkdir(exist_ok=True)
         
-        cv2.imwrite(str(output_dir / f"{video_stem}_MEI.png"), mei)
-        cv2.imwrite(str(output_dir / f"{video_stem}_MHI.png"), mhi)
-        print(f"\n已保存MEI和MHI图像到当前目录")
+        cv2.imwrite(f"data/{video_stem}_MEI.png", mei)
+        cv2.imwrite(f"data/{video_stem}_MHI.png", mhi)
+        print(f"\n已保存MEI和MHI图像到 data 目录")
         
         # 可视化
-        save_path = output_dir / f"{video_stem}_analysis.png"
-        analyzer.visualize_results(video_path, mei, mhi, save_path)
+        analyzer.visualize_results(video_path, mei, mhi, f"data/{video_stem}_analysis.png")
         
     except Exception as e:
         print(f"处理视频时出错: {e}")
@@ -249,18 +253,17 @@ def process_multiple_videos(video_paths, labels):
     analyzer = MotionAnalyzer(threshold=25, mhi_duration=30)
     
     try:
-        analyzer.compare_videos(video_paths, labels)
+        results = analyzer.compare_videos(video_paths, labels)
         
         # 分别保存每个视频的结果
-        for video_path, label in zip(video_paths, labels):
-            mei, mhi, _ = analyzer.compute_mei_mhi(video_path)
-            video_stem = Path(video_path).stem
-            output_dir = Path(video_path).parent
-            
-            cv2.imwrite(str(output_dir / f"{video_stem}_MEI.png"), mei)
-            cv2.imwrite(str(output_dir / f"{video_stem}_MHI.png"), mhi)
+        Path("data").mkdir(exist_ok=True)
         
-        print(f"\n所有视频的MEI和MHI图像已保存")
+        for video_path, (mei, mhi, _) in zip(video_paths, results):
+            video_stem = Path(video_path).stem
+            cv2.imwrite(f"data/{video_stem}_MEI.png", mei)
+            cv2.imwrite(f"data/{video_stem}_MHI.png", mhi)
+        
+        print(f"\n所有视频的MEI和MHI图像已保存到 data 目录")
         
     except Exception as e:
         print(f"处理视频时出错: {e}")
@@ -286,14 +289,7 @@ if __name__ == "__main__":
     # 视频文件路径（请根据实际情况修改）
     current_dir = Path(__file__).parent
     
-    # 方式1: 处理单个视频
-    # video_path = current_dir / "站立到坐下.mp4"
-    # if video_path.exists():
-    #     process_single_video(str(video_path))
-    # else:
-    #     print(f"\n错误: 找不到视频文件 {video_path}")
-    
-    # 方式2: 处理并对比两个视频
+
     video1 = current_dir / "1.mp4"
     video2 = current_dir / "2.mp4"
     
@@ -336,5 +332,3 @@ if __name__ == "__main__":
         print("3. 重新运行本程序")
         print("=" * 60)
         
-        # 演示模式：创建示例说明
-        print("\n或者修改代码中的视频路径，指向您的视频文件位置")
