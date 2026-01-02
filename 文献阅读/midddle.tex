@@ -1,0 +1,42 @@
+\documentclass[border=12pt, varwidth=16cm]{standalone} 
+\usepackage[UTF8]{ctex}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+
+\begin{document}
+
+\linespread{1.35}\selectfont 
+
+\noindent
+\textbf{残差表示 (Residual Representation)}
+
+\vspace{0.2cm}
+
+\noindent
+基于 He et al. (2016) 提出的 \textbf{残差学习假设 (Residual Learning Hypothesis)}：
+
+\vspace{0.2cm}
+
+设 $\mathcal{H}(\mathbf{x})$ 为若干堆叠层 (Stacked Layers) 需要拟合的潜在映射 (Underlying Mapping)，其中 $\mathbf{x}$ 为输入。如果不直接拟合 $\mathcal{H}(\mathbf{x})$，而是让网络去拟合**残差映射 (Residual Mapping)**：
+\begin{equation*}
+    \mathcal{F}(\mathbf{x}) := \mathcal{H}(\mathbf{x}) - \mathbf{x}
+\end{equation*}
+
+\noindent
+此时，原始的映射被重构为：
+\begin{equation*}
+    \mathcal{H}(\mathbf{x}) = \mathcal{F}(\mathbf{x}) + \mathbf{x}
+\end{equation*}
+
+\vspace{0.1cm}
+
+\noindent
+\textbf{优化的直觉 (Intuition for Optimization):}
+\begin{itemize}
+    \item 极端的例子：如果最优函数是\textbf{恒等映射 (Identity Mapping)}，即 $\mathcal{H}(\mathbf{x}) = \mathbf{x}$。
+    \item 传统方法需要求解器去学习参数以逼近恒等矩阵（这很难）。
+    \item 残差方法只需要将多个非线性层的权重推向 \textbf{0}（使得 $\mathcal{F}(\mathbf{x}) \to 0$），这在优化上要容易得多。
+\end{itemize}
+
+\end{document}
