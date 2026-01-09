@@ -87,8 +87,9 @@ def split_and_process(args):
         os.makedirs(temp_output)
         
         # 调用 test_output.py 处理当前批次
+        python_cmd = sys.executable if sys.executable else 'python'
         cmd = [
-            sys.executable, 'test_output.py',
+            python_cmd, 'test_output.py',
             '--test_path', temp_path,
             '--input1_name', args.input1_name,
             '--input2_name', args.input2_name,
@@ -97,7 +98,8 @@ def split_and_process(args):
         ]
         
         print(f"运行 test_output.py...")
-        result = subprocess.run(cmd, cwd=os.path.dirname(__file__))
+        print(f"命令: {' '.join(cmd)}")
+        result = subprocess.run(cmd, cwd=os.path.dirname(__file__) or '.')
         
         if result.returncode != 0:
             print(f"批次 {batch_num} 处理失败!")
